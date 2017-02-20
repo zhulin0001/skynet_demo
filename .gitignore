@@ -1,0 +1,9 @@
+*.o
+*.a
+skynet
+3rd/pbc
+/cservice
+/luaclib
+*.so
+*.dSYM
+.DS_Store
