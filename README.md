@@ -1,2 +1,2 @@
 # Server
-Server with skynet.
+A demo for skynet.
