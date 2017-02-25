@@ -17,11 +17,11 @@ end
 
 function CMD.disconnect()
 	-- todo: do something before exit
-	skynet.exit()
+ 	skynet.exit()
 end
 
 skynet.start(function()
-	skynet.dispatch("lua", function(_,_, command, ...)
+ 	skynet.dispatch("lua", function(_,_, command, ...)
 		local f = CMD[command]
 		skynet.ret(skynet.pack(f(...)))
 	end)

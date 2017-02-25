@@ -1,2 +1,2 @@
-# skynet_demo
-A demo with skynet
+# Server
+Server with skynet.
