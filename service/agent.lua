@@ -3,7 +3,6 @@ local socket = require "socket"
 
 local CMD = {}
 local client_fd
-local gate
 
 local function send_package(pack)
 	local package = string.pack(">s2", pack)
@@ -18,7 +17,7 @@ function CMD.runloop( fd )
 		print(string.format("[%d] Received: %s", fd, str))
 	end
 	print("end while")
-	skynet.call(gate, "lua", "close", fd)
+	skynet.call("GATE", "lua", "close", fd)
 end
 
 function CMD.start(fd)
@@ -35,9 +34,6 @@ end
 
 skynet.start(function()
  	skynet.dispatch("lua", function(_, source, command, ...)
- 		if command == "start" then
-			gate = source
- 		end
 		local f = CMD[command]
 		f(...)
 	end)
