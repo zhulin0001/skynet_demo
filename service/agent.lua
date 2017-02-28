@@ -3,16 +3,29 @@ local socket = require "socket"
 
 local CMD = {}
 local client_fd
+local gate
 
 local function send_package(pack)
 	local package = string.pack(">s2", pack)
 	socket.write(client_fd, package)
 end
 
+function CMD.runloop( fd )
+	while(socket.block(fd)) do
+		local len = socket.read(fd, 4)
+		len = string.unpack(">I4", len)
+		local str = socket.read(fd, len)
+		print(string.format("[%d] Received: %s", fd, str))
+	end
+	print("end while")
+	skynet.call(gate, "lua", "close", fd)
+end
+
 function CMD.start(fd)
 	client_fd = fd
 	socket.start(fd)
-	print("agent for " .. fd)
+	print("agent for fd " .. fd)
+	skynet.send(skynet.self(), "lua", "runloop", fd)
 end
 
 function CMD.disconnect()
@@ -21,8 +34,11 @@ function CMD.disconnect()
 end
 
 skynet.start(function()
- 	skynet.dispatch("lua", function(_,_, command, ...)
+ 	skynet.dispatch("lua", function(_, source, command, ...)
+ 		if command == "start" then
+			gate = source
+ 		end
 		local f = CMD[command]
-		skynet.ret(skynet.pack(f(...)))
+		f(...)
 	end)
 end)

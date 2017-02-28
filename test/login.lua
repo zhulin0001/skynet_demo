@@ -41,8 +41,10 @@ while true do
 	if input then
 		if input=="r" then
 			dispatch_package()
-		else
+		elseif input == "q" then
 			break
+		else
+			socket.send(fd, string.pack(">I4", string.len(input))..input)
 		end
 	end
 	socket.usleep(100)

@@ -27,8 +27,8 @@ local function login( source, fd )
 				data = string.len(hello)
 				data = string.pack(">I4", data)
 				print("Will write " .. hello)
-				socket.write(fd, data..hello)
 				socket.abandon(fd)
+				socket.write(fd, data..hello)
 				skynet.call(source, "lua", "forward", fd)
 				return
 			end

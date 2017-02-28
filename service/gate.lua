@@ -9,9 +9,17 @@ local loginserver
 
 local CMD = {}
 
+local function close_agent( fd )
+	local a = agent[fd]
+	agent[fd] = nil
+	if a then
+		skynet.send(a, "lua", "disconnect")
+	end
+end
+
 function CMD.forward( fd )
 	agent[fd] = skynet.newservice("agent")
-	skynet.call(agent[fd], "lua", "start", fd)
+	skynet.send(agent[fd], "lua", "start", fd)
 end
 
 function CMD.open(conf)
@@ -29,6 +37,7 @@ end
 function CMD.close( fd )
 	print("Will close " .. fd)
 	socket.close(fd)
+	close_agent(fd)
 end
 
 skynet.start(function()
