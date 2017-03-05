@@ -7,3 +7,4 @@ skynet
 *.so
 *.dSYM
 .DS_Store
+ftpsync.settings
