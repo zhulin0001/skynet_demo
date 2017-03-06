@@ -18,8 +18,6 @@ local function close_agent( fd )
 end
 
 function CMD.forward( fd )
-	agent[fd] = skynet.newservice("agent")
-	skynet.send(agent[fd], "lua", "start", fd)
 end
 
 function CMD.open(conf)
@@ -29,8 +27,9 @@ function CMD.open(conf)
 	local id = socket.listen(address, port)
 	skynet.error(string.format("Listen on %s:%d", address, port))
 	socket.start(id, function ( id, addr )
-		skynet.error(string.format("%s connected, pass it to login", addr))
-		skynet.send(loginserver, "lua", id, addr)
+		agent[id] = skynet.newservice("agent")
+		skynet.send(agent[id], "lua", "start", id)
+		skynet.error(string.format("%s connected, open agent", addr))
 	end)
 end
 

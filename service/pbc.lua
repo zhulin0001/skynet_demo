@@ -10,30 +10,22 @@ local cmd = {}
 
 function cmd.init()
 	for _,v in ipairs(pb_files) do
-		utils.print(protobuf.register_file(v))
+		protobuf.register_file(v)
 	end
 end
 
 function cmd.encode(msg_name, msg)
-	skynet.error("encode"..msg_name)
-	utils.print(msg)
-	return protobuf.encode(msg_name, msg)
+	skynet.error("encode "..msg_name)
+	return protobuf.encode("network.cmd."..msg_name, msg)
 end
 
 function cmd.decode(msg_name, data)
 	skynet.error("decode ".. msg_name.. " " .. type(data) .." " .. #data)
-	return protobuf.decode(msg_name, data)
+	return protobuf.decode("network.cmd."..msg_name, data)
 end
 
 function cmd.test()
 	skynet.error("pbc test...")
-	local msg = {account = "name"}
-	utils.print("msg = ",msg)
-	skynet.error("encode")
-	local data = cmd.encode("Login.Login", msg)
-	skynet.error("decode"..#(data))
-	local de_msg = cmd.decode("Login.Login", data)
-	skynet.error(de_msg.account)
 end
 
 skynet.start(function ()
@@ -56,6 +48,4 @@ skynet.start(function ()
 		local ret = f(...)
 			skynet.ret(skynet.pack(ret))
 	end)
-
-	skynet.register("pbc")
 end)
