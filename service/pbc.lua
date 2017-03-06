@@ -2,7 +2,8 @@ local skynet = require "skynet"
 local protobuf = require "protobuf"
 
 local pb_files = {
-	"./proto/addressbook.pb",
+	"./proto/cmd.pb",
+	"./proto/account.pb",
 }
 
 local cmd = {}

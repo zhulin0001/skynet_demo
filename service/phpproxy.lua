@@ -36,6 +36,6 @@ end
 skynet.start(function()
 	skynet.dispatch("lua", function(session, source, cmd, ...)
 		local f = CMD[cmd]
-		skynet.ret(skynet.pack(f(...)))
+		f(...)
 	end)
 end)
