@@ -9,6 +9,8 @@ local HEADER_LEN		=	2+2+4+1+4
 local socket = require "clientsocket"
 local proto  = require "protobuf"
 
+require "preload"
+
 proto.register_file("../proto/cmd.pb")
 proto.register_file("../proto/account.pb")
 --parser.register("errno.proto", ".")
@@ -35,11 +37,6 @@ local function send_login()
 	socket.send(fd, make_header(1, 1, #data, 123456789)..data)
 end
 
-local function bin2hex(s)
-    s=string.gsub(s,"(.)",function (x) return string.format("%02X ",string.byte(x)) end)
-    return s
-end
-
 local function parse_header( data )
 	local mcmd, scmd, bodylen, encrypt, context = string.unpack(">HHI4BI4", data)
 	print(string.format("MCMD:%d, SCMD:%d, bodylen:%d, encrypt:%d, context:%d", mcmd, scmd, bodylen, encrypt, context))
@@ -53,16 +50,11 @@ local function dispatch_package()
 		local pbdata = string.sub(packet, HEADER_LEN+1, #packet)
 		if pbdata then
 			print(string.format("[%d] Received: %s", fd, bin2hex(pbdata)))
-			local ret = proto.decode("network.cmd.PBRespAccountLogin", pbdata)
+			local ret, err = proto.decode("network.cmd.PBRespAccountLogin", pbdata)
 			if ret then
-				for k,v in pairs(ret) do
-					print(k,v)
-					if type(v) == "table" then
-						for k,v in pairs(v) do
-							print(k,v)
-						end
-					end
-				end
+				print(dumpTab(ret))
+			else
+				print(err)
 			end
 		end
 	end

@@ -33,9 +33,7 @@ function CMD.cmd( source, scmd, context, data )
 	if scmd == 1 then
 		local param = skynet.call("PBC", "lua", "decode", "PBReqAccountLogin", data)
 		if param then
-			for k,v in pairs(param) do
-				print(k,v)
-			end
+			print(dumpTab(param))
 		end
 		local ret = {
 			code	=	1,

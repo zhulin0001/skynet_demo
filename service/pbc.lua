@@ -21,7 +21,11 @@ end
 
 function cmd.decode(msg_name, data)
 	skynet.error("decode ".. msg_name.. " " .. type(data) .." " .. #data)
-	return protobuf.decode("network.cmd."..msg_name, data)
+	local ok, err = protobuf.decode("network.cmd."..msg_name, data)
+	if not ok then
+		skynet.error("deoce Error " .. err)
+	end
+	return ok
 end
 
 function cmd.test()
