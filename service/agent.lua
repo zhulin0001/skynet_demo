@@ -4,6 +4,9 @@ local socket = require "socket"
 local CMD = {}
 local client_fd
 
+local hasVerify
+local loginCmd = 1
+
 local HEADER_LEN		=	2+2+4+1+4
 
 
@@ -49,7 +52,16 @@ function CMD.runloop( fd )
 			break
 		end
 		local mcmd, scmd, bodylen, encrypt, context = parse_header(header)
+		if not hasVerify then
+			--未认证链接，必须先认证。只处理有关认证请求
+			if cmd ~= loginCmd then
+				break
+			end
+		end
 		local pbdata = socket.read(fd, bodylen)
+		if not pbdata then		--连接断开导致读到false
+			break
+		end
 		print(string.format("[%d] Received: %s", fd, bin2hex(pbdata)))
 		dispatch(mcmd, scmd, context, pbdata)
 	end
@@ -73,9 +85,16 @@ function CMD.disconnect()
  	skynet.exit()
 end
 
+function CMD.UserInfoUpdate( info )
+	if info.status then
+		hasVerify = true
+	end
+end
+
 skynet.start(function()
  	skynet.dispatch("lua", function(_, source, command, ...)
 		local f = CMD[command]
 		f(...)
 	end)
+	hasVerify = false
 end)

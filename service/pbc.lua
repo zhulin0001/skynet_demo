@@ -1,6 +1,8 @@
 local skynet = require "skynet"
 local protobuf = require "protobuf"
 
+local pb
+
 local pb_files = {
 	"./proto/cmd.pb",
 	"./proto/account.pb",
@@ -28,8 +30,11 @@ function cmd.decode(msg_name, data)
 	return ok
 end
 
+
+
 function cmd.test()
 	skynet.error("pbc test...")
+	print(protobuf.enum_id("network.cmd.PBMainCmdAccountSubCmd", "Account_RespInfoExt"))
 end
 
 skynet.start(function ()
