@@ -8,7 +8,7 @@ end
 -- @tab： table
 -- @ind：不用传此参数，递归用（前缀格式（空格））
 -- @return: format string of the table
-function dumpTab(tab,ind)
+function dumpTableToString(tab,ind)
   if(tab==nil)then return "nil" end;
   local str="{";
   if(ind==nil)then ind="  "; end;
@@ -31,7 +31,7 @@ function dumpTab(tab,ind)
     elseif(type(v)=="string")then
       s="\""..v.."\"";
     elseif(type(v)=="table")then
-      s=dumpTab(v,ind.."  ");
+      s=dumpTableToString(v,ind.."  ");
       s=string.sub(s,1,#s-1);
     elseif(type(v)=="function")then
       s="function : "..v;
@@ -50,4 +50,4 @@ function dumpTab(tab,ind)
   if(#ind>0)then ind=string.sub(ind,1,#ind-2) end;
   sss=sss.."\n"..ind.."}\n";
   return sss;--string.sub(str,1,#str-1).."\n"..ind.."}\n";
-end;--//end function
+end--//end function

@@ -17,8 +17,9 @@ function cmd.init()
 end
 
 function cmd.encode(msg_name, msg)
-	skynet.error("encode "..msg_name)
-	return protobuf.encode("network.cmd."..msg_name, msg)
+	skynet.error("encode ".. msg_name)
+	skynet.error("msg " .. dumpTableToString(msg))
+	return protobuf.encode("network.cmd." .. msg_name, msg)
 end
 
 function cmd.decode(msg_name, data)
@@ -27,6 +28,7 @@ function cmd.decode(msg_name, data)
 	if not ok then
 		skynet.error("deoce Error " .. err)
 	end
+	skynet.error("msg " .. dumpTableToString(msg))
 	return ok
 end
 
@@ -38,9 +40,7 @@ function cmd.test()
 end
 
 skynet.start(function ()
-	skynet.error("init pbc...")
 	cmd.init()
-
 	skynet.dispatch("lua", function (session, address, command, ...)
 		local f = cmd[command]
 		if not f then

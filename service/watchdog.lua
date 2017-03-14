@@ -1,5 +1,6 @@
 local skynet = require "skynet"
 require "skynet.manager"
+local snax = require "snax"
 
 local CMD = {}
 local gate
@@ -26,6 +27,8 @@ skynet.start(function()
 	skynet.name("GATE", gate)
 	skynet.name("PHPPROXY", skynet.newservice("phpproxy"))
 	skynet.name("PBC", skynet.newservice("pbc"))
-	skynet.newservice("testping")
-	--skynet.call("PBC", "lua", "test")
+	--local pbc = snax.newservice("pbc")
+	--skynet.newservice("testping")
+	--local pb = pbc.req.getObj()
+	--print(pb.enum_id("network.com.PBMainCmd", "MCmd_Account"))
 end)

@@ -30,7 +30,7 @@ local function send_login()
 		type	=	1,
 		platuid	=	"18098924892",
 		token	=	"hehe",
-		lang	=	1,
+		lang	=	0,
 		time	=	os.time()
 	}
 	local data = proto.encode("network.cmd.PBReqAccountLogin", login)
@@ -52,7 +52,7 @@ local function dispatch_package()
 			print(string.format("[%d] Received: %s", fd, bin2hex(pbdata)))
 			local ret, err = proto.decode("network.cmd.PBRespAccountLogin", pbdata)
 			if ret then
-				print(dumpTab(ret))
+				print(dumpTableToString(ret))
 			else
 				print(err)
 			end

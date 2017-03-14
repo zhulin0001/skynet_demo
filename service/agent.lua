@@ -20,7 +20,7 @@ end
 -- uint16,uint16,uint32,uint8,	uint32,	 bytes
 
 local function send_package(pack)
-	print(string.format("Will Send to [%d] %d bytes", client_fd, #pack))
+	skynet.error(string.format("Will Send to [%d] %d bytes", client_fd, #pack))
 	socket.write(client_fd, pack)
 end
 
@@ -54,7 +54,7 @@ function CMD.runloop( fd )
 		local mcmd, scmd, bodylen, encrypt, context = parse_header(header)
 		if not hasVerify then
 			--未认证链接，必须先认证。只处理有关认证请求
-			if cmd ~= loginCmd then
+			if mcmd ~= loginCmd then
 				break
 			end
 		end
@@ -86,6 +86,7 @@ function CMD.disconnect()
 end
 
 function CMD.UserInfoUpdate( info )
+	skynet.error(string.format("User [%d] update Info %s", info.uid, dumpTableToString(info)))
 	if info.status then
 		hasVerify = true
 	end

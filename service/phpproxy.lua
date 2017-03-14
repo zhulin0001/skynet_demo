@@ -32,20 +32,23 @@ end
 function CMD.cmd( source, scmd, context, data )
 	if scmd == 1 then
 		local param = skynet.call("PBC", "lua", "decode", "PBReqAccountLogin", data)
-		if param then
-			print(dumpTab(param))
-		end
 		local ret = {
-			code	=	1,
-			time	=	os.time(),
-			user	=	{
+			code	=	0,
+			time 	=	os.time()
+		}
+		if param then
+			if param.platuid == "18098924892" and param.token == "hehe" then
+				ret.code = 1
+				ret.user = {
 					uid		=	"1",
 					name	=	"zhulin",
 					icon	=	nil,
 					mmoney	=	9999999,
 					status	=	1
-			}
-		}
+				}
+				skynet.send(source, "lua", "UserInfoUpdate", {status = true, uid = 1})
+			end
+		end
 		local respData = skynet.call("PBC", "lua", "encode", "PBRespAccountLogin", ret)
 		skynet.send(source, "lua", "response", make_header(1, 2, #respData, context)..respData)
 	end
